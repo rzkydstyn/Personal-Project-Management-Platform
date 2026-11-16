@@ -6,10 +6,18 @@ import {
   Link,
 } from 'react-router-dom';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
+import { ProtectedRoute, PublicOnlyRoute } from '@/features/auth/RouteGuards';
+import {
+  LoginPage,
+  RegisterPage,
+  ForgotPasswordPage,
+} from '@/features/auth/AuthPages';
+import { SettingsPage } from '@/features/settings/SettingsPage';
+import { useAuthStore } from '@/stores/useAuthStore';
 import { FolderKanban, CheckSquare, Clock, AlertCircle } from 'lucide-react';
 
-// Initial Dashboard Overview View (Akan dihubungkan ke real database di Fase 2 & 3)
 const DashboardFoundationView: React.FC = () => {
+  const { profile, user } = useAuthStore();
   const stats = [
     { label: 'Total Projects', value: '0', icon: FolderKanban, color: 'text-[#6366F1]' },
     { label: 'Pending Tasks', value: '0', icon: CheckSquare, color: 'text-[#3B82F6]' },
@@ -22,7 +30,7 @@ const DashboardFoundationView: React.FC = () => {
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h2 className="text-[20px] font-semibold text-slate-900 dark:text-white">
-            Welcome to ProjectFlow
+            Welcome back, {profile?.full_name || user?.email}
           </h2>
           <p className="text-[14px] text-slate-500 dark:text-slate-400">
             Plan Smarter. Work Better. Track Everything.
@@ -54,10 +62,10 @@ const DashboardFoundationView: React.FC = () => {
 
       <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center dark:border-slate-800 dark:bg-slate-900">
         <h3 className="text-[16px] font-semibold text-slate-900 dark:text-white">
-          Phase 1 Foundation Active
+          Phase 2 Connected to Supabase
         </h3>
         <p className="mx-auto mt-1 max-w-md text-[14px] text-slate-500 dark:text-slate-400">
-          Layout shell, responsive sidebar, routing structure, and state providers are configured. Ready for Phase 2 (Supabase Database & Auth).
+          Your database schema, Row Level Security policies, and authenticated session are live. Ready for Phase 3 (Projects & Tasks CRUD).
         </p>
       </div>
     </div>
@@ -73,7 +81,7 @@ const ModuleReadyView: React.FC<{ title: string; phase: string }> = ({
       {title}
     </h2>
     <p className="mt-1 text-[14px] text-slate-500 dark:text-slate-400">
-      Route is registered and connected to the main layout. Full database logic will be implemented in {phase}.
+      Full database integration for this module will be implemented in {phase}.
     </p>
   </div>
 );
@@ -99,30 +107,31 @@ const router = createBrowserRouter([
     element: <Navigate to="/dashboard" replace />,
   },
   {
-    path: '/login',
-    element: <ModuleReadyView title="Authentication – Login" phase="Phase 2" />,
-  },
-  {
-    path: '/register',
-    element: <ModuleReadyView title="Authentication – Register" phase="Phase 2" />,
-  },
-  {
-    path: '/forgot-password',
-    element: <ModuleReadyView title="Authentication – Forgot Password" phase="Phase 2" />,
-  },
-  {
-    element: <DashboardLayout />,
+    element: <PublicOnlyRoute />,
     children: [
-      { path: '/dashboard', element: <DashboardFoundationView /> },
-      { path: '/projects', element: <ModuleReadyView title="Projects Module" phase="Phase 3" /> },
-      { path: '/projects/:id', element: <ModuleReadyView title="Project Detail" phase="Phase 3" /> },
-      { path: '/tasks', element: <ModuleReadyView title="Tasks Module" phase="Phase 3" /> },
-      { path: '/kanban', element: <ModuleReadyView title="Kanban Board" phase="Phase 4" /> },
-      { path: '/calendar', element: <ModuleReadyView title="Calendar View" phase="Phase 4" /> },
-      { path: '/time-tracking', element: <ModuleReadyView title="Time Tracking" phase="Phase 4" /> },
-      { path: '/analytics', element: <ModuleReadyView title="Productivity Analytics" phase="Phase 5" /> },
-      { path: '/notifications', element: <ModuleReadyView title="Real-Time Notifications" phase="Phase 5" /> },
-      { path: '/settings', element: <ModuleReadyView title="User Settings" phase="Phase 5" /> },
+      { path: '/login', element: <LoginPage /> },
+      { path: '/register', element: <RegisterPage /> },
+      { path: '/forgot-password', element: <ForgotPasswordPage /> },
+    ],
+  },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        element: <DashboardLayout />,
+        children: [
+          { path: '/dashboard', element: <DashboardFoundationView /> },
+          { path: '/projects', element: <ModuleReadyView title="Projects Module" phase="Phase 3" /> },
+          { path: '/projects/:id', element: <ModuleReadyView title="Project Detail" phase="Phase 3" /> },
+          { path: '/tasks', element: <ModuleReadyView title="Tasks Module" phase="Phase 3" /> },
+          { path: '/kanban', element: <ModuleReadyView title="Kanban Board" phase="Phase 4" /> },
+          { path: '/calendar', element: <ModuleReadyView title="Calendar View" phase="Phase 4" /> },
+          { path: '/time-tracking', element: <ModuleReadyView title="Time Tracking" phase="Phase 4" /> },
+          { path: '/analytics', element: <ModuleReadyView title="Productivity Analytics" phase="Phase 5" /> },
+          { path: '/notifications', element: <ModuleReadyView title="Real-Time Notifications" phase="Phase 5" /> },
+          { path: '/settings', element: <SettingsPage /> },
+        ],
+      },
     ],
   },
   {
