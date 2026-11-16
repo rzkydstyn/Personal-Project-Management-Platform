@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#F8FAFC] text-[#0F172A] dark:bg-[#0F172A] dark:text-[#F8FAFC] font-sans antialiased text-[14px] leading-relaxed;
+  }
+
+  h1 {
+    @apply text-[24px] md:text-[28px] font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply text-[18px] md:text-[20px] font-semibold tracking-tight;
+  }
+
+  h3 {
+    @apply text-[15px] font-semibold;
+  }
+}
