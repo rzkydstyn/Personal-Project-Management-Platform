@@ -12,65 +12,13 @@ import {
   RegisterPage,
   ForgotPasswordPage,
 } from '@/features/auth/AuthPages';
+import { DashboardPage } from '@/features/dashboard/DashboardPage';
+import {
+  ProjectsPage,
+  ProjectDetailPage,
+} from '@/features/projects/ProjectsPages';
+import { TasksPage } from '@/features/tasks/TasksPage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { FolderKanban, CheckSquare, Clock, AlertCircle } from 'lucide-react';
-
-const DashboardFoundationView: React.FC = () => {
-  const { profile, user } = useAuthStore();
-  const stats = [
-    { label: 'Total Projects', value: '0', icon: FolderKanban, color: 'text-[#6366F1]' },
-    { label: 'Pending Tasks', value: '0', icon: CheckSquare, color: 'text-[#3B82F6]' },
-    { label: 'Overdue Tasks', value: '0', icon: AlertCircle, color: 'text-[#EF4444]' },
-    { label: 'Tracked Hours', value: '0.0h', icon: Clock, color: 'text-[#16A34A]' },
-  ];
-
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h2 className="text-[20px] font-semibold text-slate-900 dark:text-white">
-            Welcome back, {profile?.full_name || user?.email}
-          </h2>
-          <p className="text-[14px] text-slate-500 dark:text-slate-400">
-            Plan Smarter. Work Better. Track Everything.
-          </p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <div
-              key={stat.label}
-              className="rounded-xl border border-slate-200 bg-white p-5 shadow-2xs dark:border-slate-800 dark:bg-slate-900"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[13px] font-medium text-slate-500 dark:text-slate-400">
-                  {stat.label}
-                </span>
-                <Icon className={`h-5 w-5 ${stat.color}`} />
-              </div>
-              <p className="mt-3 text-[26px] font-bold text-slate-900 dark:text-white">
-                {stat.value}
-              </p>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center dark:border-slate-800 dark:bg-slate-900">
-        <h3 className="text-[16px] font-semibold text-slate-900 dark:text-white">
-          Phase 2 Connected to Supabase
-        </h3>
-        <p className="mx-auto mt-1 max-w-md text-[14px] text-slate-500 dark:text-slate-400">
-          Your database schema, Row Level Security policies, and authenticated session are live. Ready for Phase 3 (Projects & Tasks CRUD).
-        </p>
-      </div>
-    </div>
-  );
-};
 
 const ModuleReadyView: React.FC<{ title: string; phase: string }> = ({
   title,
@@ -81,7 +29,7 @@ const ModuleReadyView: React.FC<{ title: string; phase: string }> = ({
       {title}
     </h2>
     <p className="mt-1 text-[14px] text-slate-500 dark:text-slate-400">
-      Full database integration for this module will be implemented in {phase}.
+      Full interactive functionality for this module will be implemented in {phase}.
     </p>
   </div>
 );
@@ -120,10 +68,10 @@ const router = createBrowserRouter([
       {
         element: <DashboardLayout />,
         children: [
-          { path: '/dashboard', element: <DashboardFoundationView /> },
-          { path: '/projects', element: <ModuleReadyView title="Projects Module" phase="Phase 3" /> },
-          { path: '/projects/:id', element: <ModuleReadyView title="Project Detail" phase="Phase 3" /> },
-          { path: '/tasks', element: <ModuleReadyView title="Tasks Module" phase="Phase 3" /> },
+          { path: '/dashboard', element: <DashboardPage /> },
+          { path: '/projects', element: <ProjectsPage /> },
+          { path: '/projects/:id', element: <ProjectDetailPage /> },
+          { path: '/tasks', element: <TasksPage /> },
           { path: '/kanban', element: <ModuleReadyView title="Kanban Board" phase="Phase 4" /> },
           { path: '/calendar', element: <ModuleReadyView title="Calendar View" phase="Phase 4" /> },
           { path: '/time-tracking', element: <ModuleReadyView title="Time Tracking" phase="Phase 4" /> },
